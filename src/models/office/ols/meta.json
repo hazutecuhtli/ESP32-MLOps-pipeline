@@ -1,0 +1,17 @@
+{
+  "topic": "office",
+  "model": "ols_hac",
+  "columns": [
+    "const",
+    "lag_4",
+    "lag_3",
+    "lag_2",
+    "lag_1"
+  ],
+  "hac_maxlags": 4,
+  "metrics": {
+    "mae": 0.1518663258957389,
+    "rmse": 0.2211185183382409,
+    "r2": 0.9791385156707955
+  }
+}

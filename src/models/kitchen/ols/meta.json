@@ -1,0 +1,17 @@
+{
+  "topic": "kitchen",
+  "model": "ols_hac",
+  "columns": [
+    "const",
+    "lag_4",
+    "lag_3",
+    "lag_2",
+    "lag_1"
+  ],
+  "hac_maxlags": 4,
+  "metrics": {
+    "mae": 0.1907510026754624,
+    "rmse": 0.25971102921884,
+    "r2": 0.8248698988196832
+  }
+}
