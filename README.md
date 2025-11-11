@@ -287,9 +287,6 @@ python <path_to_pipeline_tick.py> --name <tag>
 (e.g., MLFLOW_TRACKING_URI, database credentials, paths, etc.).
 Update this file with values corresponding to your local or server environment before running the system.
 
-
-### Securyty 
-
 ## Conclusion
 
 MLOps practices enable the correction and continuous improvement of models when their performance degrades over time.
