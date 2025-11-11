@@ -172,10 +172,16 @@ It is important to highlight that the objective at this stage is not to forecast
 </p>
 <p align="center"><em>Figure 5. End-to-end local MLOps architecture integrating IoT data ingestion (InfluxDB), automated training and monitoring pipelines, and MLflow-based model tracking.</em></p>
 
+The architecture enables continuous model improvement by constantly performing inferences and evaluating performance against predefined metrics. If the model’s performance degrades or falls below the expected threshold, it is automatically retrained until it reaches the desired accuracy level.
+
+<p align="center">
+  <img src="images/MLOps_pipeline.png" alt="DataStorageArchitecture" width="450"/>
+</p>
+<p align="center"><em>Figure 6. The screenshot above was captured during the execution of the Python-based pipeline orchestration.</em></p>
 
 ### MLflow Tracking and Monitoring
 
-MLflow is used to track each experiment, storing model parameters, metrics, and artifacts generated during the training, monitoring, and inference stages. This enables comparison between model versions, identification of performance degradation, and visualization of metrics through the local MLflow UI (http://localhost:5000). By integrating MLflow into the pipeline, every training or retraining process is automatically logged, ensuring full traceability and reproducibility.
+MLflow is used to track each experiment by storing model parameters, metrics, and artifacts generated during the training, inference, and monitoring stages. This enables version comparison, performance degradation detection, and visualization of results through the local MLflow UI (http://localhost:5000). By integrating MLflow into the pipeline, every training or retraining step is automatically logged, ensuring full traceability and reproducibility.
 
 Local monitoring was implemented due to limitations in the Droplet specifications, particularly the use of a shared CPU and limited memory. These hardware constraints made it difficult to correctly deploy remote services, as the available resources were insufficient for running concurrent tracking and inference processes.
 
@@ -184,6 +190,21 @@ It is importanty to remank, to use mlflow locally it is neceesary to start the s
 ```bash
 mlflow ui --backend-store-uri <path_to_your_mlruns_folder>
 ```
+
+In this project, the model’s live performance is monitored through three fundamental metrics: Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and the Coefficient of Determination ($R^2$), which together offer a comprehensive view of prediction quality on unseen data.
+
+<p align="center">
+  <img src="images/Mlflow_LiveInferences.png" alt="DataStorageArchitecture" width="500"/>
+</p>
+<p align="center"><em>Figure 7. MLflow dashboard showing live performance monitoring metrics for the Office model.</em></p>
+
+Additionally, MLflow supports drift detection by tracking the Exponentially Weighted Moving Average (EWMA) of the prediction error, along with rolling MAE and RMSE computed over 4-hour and 12-hour rolling windows. These metrics enable early identification of performance degradation and facilitate timely retraining of the model.
+
+<p align="center">
+  <img src="images/Mlflow_Monitoring.png" alt="DataStorageArchitecture" width="500"/>
+</p>
+<p align="center"><em>Figure 8. MLflow dashboard illustrating continuous model monitoring using performance metrics computed over the last 12 hours.</em></p>
+
 
 ### Manual Use of Scripts
 

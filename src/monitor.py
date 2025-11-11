@@ -218,7 +218,17 @@ def main():
         "rmse_12h":roll_rmse_12h,
         "ewma_abs_error":ewma}
 
-    print(metrics_mon)
+    #print(metrics_mon)
+    print()
+    print('  Monitoring Performance  ')
+    print(f'-------------------------')
+    print(f'|  Metric    |   Value  |')
+    print(f'-------------------------')
+    print(f"|  mae_4h    |   {roll_mae_4h:.4f} |")
+    print(f"|  rmse_4h   |   {roll_rmse_4h:.4f} |")
+    print(f"|  mae_12h   |   {roll_mae_12h:.4f} |")
+    print(f"|  rmse_12h  |   {roll_rmse_12h:.4f} |")
+    print()
 
 
 
@@ -234,8 +244,8 @@ def main():
     else:
         if FLAG.exists():
             FLAG.unlink()
-        print("*****-----> Modelo OK. No retraining needed <-----*****\n")
-
+        print("                    >>>>>>>>>>> Modelo OK. No retraining needed <<<<<<<<<<<<<<\n")
+        
     # Saving locally
     HIST = r"src\data\monitor_history.parquet"
     row = {

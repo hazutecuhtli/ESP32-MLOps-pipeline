@@ -5,7 +5,8 @@
 import pandas as pd
 import argparse
 import numpy as np
-
+import warnings
+warnings.filterwarnings("ignore", message="is_datetime64tz_dtype is deprecated")
 # ******************************************************************************************************
 # Fucntions
 # ******************************************************************************************************

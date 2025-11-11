@@ -150,6 +150,16 @@ def run_once(args):
     if metrics:
         print("Live metrics:", metrics)
 
+        print()
+        print('     Live Performance     ')
+        print(f'-------------------------')
+        print(f'|  Metric   |   Value   |')
+        print(f'-------------------------')
+        print(f"|  mae      |  {metrics['mae_live']:.4f}   |")
+        print(f"|  rmse     |  {metrics['rmse_live']:.4f}   |")
+        print(f"|  r2       |  {metrics['r2_live']:.4f}   |")
+        print()
+        
     # Adding data log
     append_predictions_log(df_out, pred_col="yhat", path=args.pred_log)
 

@@ -257,7 +257,7 @@ def train_model():
             model_output=pd.Series(np.zeros(len(input_example_o)), name="prediction")
         )
 
-        tmpdir = tempfile.mkdtemp()   # ← crea un directorio temporal (por ej. C:\Users\alfde\AppData\Local\Temp\tmpabc123)
+        tmpdir = tempfile.mkdtemp()   # ← Making a tempfolder
         try:
             mlflow.pyfunc.save_model(
                 path=tmpdir,                  # guarda el modelo allí

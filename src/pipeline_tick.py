@@ -8,7 +8,8 @@ import subprocess
 import pandas as pd
 from pathlib import Path
 from datetime import datetime, timezone
-
+import warnings
+warnings.filterwarnings("ignore")
 ROOT = Path(__file__).resolve().parents[1]   # Root path
 DATA = ROOT / "src\data"
 FLAG = DATA / "RETRAIN_NEEDED.flag"
@@ -38,20 +39,23 @@ def append_history(**kwargs):
         pd.concat([prev, pd.DataFrame([row])], ignore_index=True).to_parquet(HIST, index=False)
     else:
         pd.DataFrame([row]).to_parquet(HIST, index=False)
-    print("Updated monitor historical data.")
+    print("\nUpdated monitor historical data.\n")
+    print('-----------------------------------------------------------------------------------------------------\n')
 
 # Main
 def main():
     
     py = sys.executable  # current Python interpreter
-    
     # Retrieve last 12h of data (not used during training)
+    print('\n********************************     Starting MLOps Pipeline    **************************************\n')
+    print('\n-------------------------------- Generating Data for Inference -----------------------------------------')    
+    print('\n-------------> Gathering data to evaluate the model...')
     ok_data = run_cmd([py, "src/data.py", "--hours_start", "12", "--hours_stop", "0", "--name", "pred"], cwd=ROOT)
     if not ok_data:
         append_history(event="tick", stage="data", retrained=False, notes="data_failed")
         return
-    
     # Generate features for monitoring
+    print('-------------> Generating features for inference...')
     ok_feat = run_cmd([py, "src/features.py", "--name", "pred"], cwd=ROOT)
     if not ok_feat:
         append_history(event="tick", stage="features", retrained=False, notes="features_failed")
@@ -64,7 +68,11 @@ def main():
 
     # Predicting tempreatures for MLOps
     for topic, local_dir, parquet, run_name in evals:
+        print('\n--------------------------------       Monitoring Models      --------------------------------------')        
+        print(f'--------------------------------         {topic} Model         --------------------------------------\n')
+        print('-------------> Making temperature inferences on unseen data...')        
         # 1) PREDICT
+        print('\n-------------> Generating inferences:')        
         ok_pred = run_cmd(
             [py, "src/predict.py",
              "--local-dir", local_dir,
@@ -77,7 +85,7 @@ def main():
         if not ok_pred:
             append_history(event="tick", topic=topic, retrained=False, notes="predict_failed")
             continue
-
+        print('\n------------> Monitoring prediction results against ground truth:')
         # Monitoring model performances
         ok_mon = run_cmd(
             [py, "src/monitor.py",
@@ -88,10 +96,12 @@ def main():
         if not ok_mon:
             append_history(event="monitor_error", topic=topic, retrained=False, notes="monitor_failed")
             continue
+        #print('\n ---------------------------------------------------------------------- \n')
 
         # Retraining model if performance not good enough
         if FLAG.exists():
-            print("Retraining needed. Runing train.py …")
+            print('\n>>=================>> Retrained Needed!!: <<=================<<')
+            print("Runing train.py …")
             try:
                 reasons = FLAG.read_text().strip()
             except Exception:
